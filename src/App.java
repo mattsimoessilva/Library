@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import java.util.Scanner;
 
 public class App {
@@ -131,6 +134,8 @@ public class App {
             else if (number == 4) {
                 while (true) {
                     if (biblioteca.getLivros().size() > 0 && biblioteca.getLeitores().size() > 0 && biblioteca.livrosDisponiveis()) {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
                         System.out.println(String.format("Escolha um livro: \n %s", biblioteca.listarLivrosDisponiveis()));
                         int indiceLivro = reader.nextInt();
                         reader.nextLine();
@@ -140,12 +145,14 @@ public class App {
                         reader.nextLine();
 
                         System.out.println("Informe a data de empréstimo: ");
-                        String dataEmp = reader.nextLine();
+                        String dataEmpString = reader.nextLine();
+                        Date dataEmp = dateFormat.parse(dataEmpString);
 
                         System.out.println("Informe a data de devolução: ");
-                        String dataDev = reader.nextLine();
+                        String dataDevString = reader.nextLine();
+                        Date dataDev = dateFormat.parse(dataDevString);
 
-                        if (dataEmp.equals("") || dataDev.equals("") || dataEmp.equals(dataDev)) {
+                        if (dataEmp.equals("") || dataDev.equals("") || dataEmp.equals(dataDev) || dataDev.before(dataEmp)) {
                             System.out.println("Não foi possível realizar o empréstimo");
                         } else {
                             biblioteca.getLivro(indiceLivro).adicionarQuantidadeEmp(1);
@@ -178,7 +185,7 @@ public class App {
                     int indiceEmprestimo = reader.nextInt();
                     reader.nextLine();
 
-                    biblioteca.getEmprestimo(indiceEmprestimo).livro.removerQuantidadeEmp(1);   
+                    biblioteca.getEmprestimo(indiceEmprestimo).getLivro().removerQuantidadeEmp(1);   
                     biblioteca.removerEmprestimo(indiceEmprestimo);  
                     System.out.println("Devolução realizada"); 
                 }
